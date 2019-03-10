@@ -7,12 +7,47 @@
 // 	img: ""
 // };
 
-var questionsIndex2 = [];
+function timeConverter(timeStamp) {
+	var minutes = Math.floor(timeStamp / 60);
+	var seconds = timeStamp - minutes * 60;
 
-var questionsIndex = [
+	if (seconds < 10) {
+		seconds = "0" + seconds;
+	}
+
+	if (minutes === 0) {
+		minutes = "00";
+	} else if (minutes < 10) {
+		minutes = "" + minutes;
+	}
+	return minutes + ":" + seconds;
+}
+
+var counter = 0;
+function reset() {
+	counter = 0;
+	questionTime = 30;
+	clearInterval(timerID);
+}
+var questionTime = 30;
+
+function timer() {
+	var clock = $("#clock");
+	clock.text(questionTime - counter);
+
+	function time() {
+		counter++;
+		clock.text(questionTime - counter);
+		if (counter >= 30) {
+			consolation();
+		}
+	}
+	timerID = setInterval(time, 1000);
+}
+
+var junkyard = [
 	{
-		question:
-			"Given what we know, it's most likely Ned promised his sister...",
+		question: "Ned promised her...",
 		imgYes: "",
 		imgNo: "",
 		answers: {
@@ -26,7 +61,7 @@ var questionsIndex = [
 	},
 	{
 		question:
-			"Which word is most plausible, the one that Brienne as the Brothers without Banners hanged her?",
+			"What was the word Brienne screamed as the Brothers without Banners hanged her?",
 		imgYes: "",
 		imgNo: "",
 		answers: {
@@ -42,7 +77,7 @@ var questionsIndex = [
 		imgYes: "",
 		imgNo: "",
 		answers: {
-			choiceA: "I really just don't know.",
+			choiceA: "Grrm was McCumber the whole time.",
 			choiceB:
 				"The Lord of Light returns from the Shadowlands beyond Asshai to bring a Dream for Spring.",
 			choiceC:
@@ -66,7 +101,7 @@ var questionsIndex = [
 		}
 	},
 	{
-		question: "My favorite book was...",
+		question: "The best was...",
 		imgYes: "",
 		imgNo: "",
 		answers: {
@@ -78,26 +113,26 @@ var questionsIndex = [
 		}
 	},
 	{
-		question: "Jake's favorite Bran chapter is...",
+		question: "Chicken, turtle stew, flagons, of gravy...",
 		imgYes: "",
 		imgNo: "",
 		answers: {
-			choiceA: "When he first wargs into Hodor",
-			choiceB: "When he feels what Jaime does for love.",
-			choiceC: "When he spreads his arms, and flew.",
-			choiceD: "When he's Summer for the first time.",
+			choiceA: "...turnips, mashed beats and lamprey pie...,",
+			choiceB: "... smoked ham with garlic-roast unions...,",
+			choiceC: "...a plump, sugary lemon-cake...,",
+			choiceD: "... and some hot mulled wine to wash it down.",
 			correct: "c"
 		}
 	},
 	{
-		question: "I wish the show had...",
+		question: "The show needs...",
 		imgYes: "",
 		imgNo: "",
 		answers: {
-			choiceA: "More sex!",
+			choiceA: "More battles!",
 			choiceB: "More Stoneheart!",
 			choiceC: "More dragons!",
-			choiceD: "More battles!",
+			choiceD: "More nudity!",
 			correct: "b"
 		}
 	},
@@ -114,75 +149,57 @@ var questionsIndex = [
 		}
 	},
 	{
-		question: "The spider's main job is...",
+		question: "Varys main job is...",
 		imgYes: "",
 		imgNo: "",
 		answers: {
 			choiceA: "To remain obsequious and without scruple.",
 			choiceB: "To Protect the realm... someone must.",
 			choiceC: "To be the master of whispers.",
-			choiceD: "Yes.",
+			choiceD: "To not tell anyone where Syrio is.",
 			correct: "d"
 		}
 	},
 	{
-		question: "If I were a character in game of thrones, I'd be...",
+		question: "The last book will come out...",
 		imgYes: "",
 		imgNo: "",
 		answers: {
-			choiceA: "Arya",
-			choiceB: "A highborn lordling",
-			choiceC: "A bastard with the surname Snow",
-			choiceD: "A back-ally sally.",
+			choiceA: "When the sun rises in the west and sets in the east",
+			choiceB: "when the rivers run dry",
+			choiceC: "And the mountains blow in the wind like leaves.",
+			choiceD: "Hodor",
 			correct: "d"
 		}
 	}
 ];
 
-// var currentQ = runningQ[runningQ.length - 1];
-
-var junkyard = [];
+var questionsIndex = [];
 var ri;
 // questionsIndex[Math.floor(Math.random() * questionsIndex.length)];
 var score = 0;
 var total = 0;
 
-// var checkAnswer = function checkAnswer() {
-// 	if (this == ri.answers.correct) {
-// 		console.log("you did it!");
-// 	} else if (this !== ri.answers.correct) {
-// 		console.log("you suck!");
-// 	} else {
-// 		console.log("neither happened");
-// 	}
-// };
-
 var newQuestion = function newQuestion() {
+	$(".container3").attr("style", "display:none");
+	$(".container2").attr("style", "display:block");
+	timer();
 	ri = questionsIndex[Math.floor(Math.random() * questionsIndex.length)];
+	// reset1();
+	// $("clock").text(time);
 	$("#question").text(ri.question);
 	$("#aText").text(ri.answers.choiceA);
 	$("#bText").text(ri.answers.choiceB);
 	$("#cText").text(ri.answers.choiceC);
 	$("#dText").text(ri.answers.choiceD);
 	$(".letters").attr("id", ri.answers.correct);
-	// $(questionsIndex.popri));
-	console.log(ri.answers.correct);
 };
 
-$("#nextBtn").click(function() {
-	$(".container3").attr("style", "display:none");
-	ri = questionsIndex[Math.floor(Math.random() * questionsIndex.length)];
-	$(".container2").attr("style", "display:block");
-	newQuestion();
-});
-
+questionReset();
 $("#start").click(function() {
 	$(".container1").attr("style", "display:none");
-	$(".container2").attr("style", "display:block");
 	ri = questionsIndex[Math.floor(Math.random() * questionsIndex.length)];
-	jokerReset();
-	console.log(junkyard);
-	// newQuestion();
+	newQuestion();
 });
 
 $(".choices").click(function() {
@@ -193,11 +210,12 @@ $(".choices").click(function() {
 			consolation();
 		}
 	} else {
-		finalresults();
+		finalResults();
 	}
 });
 
 function fanfare() {
+	reset();
 	$(".container2").attr("style", "display:none");
 	$(".container3").attr("style", "display:block");
 	$("#resultText").text("My thoughts exactly!");
@@ -205,50 +223,34 @@ function fanfare() {
 	questionsIndex.splice(questionsIndex.indexOf(ri), 1);
 	score++;
 	total++;
+	$("#timer").append(setTimeout(newQuestion, 5000));
 }
 
 function consolation() {
+	reset();
 	$(".container2").attr("style", "display:none");
 	$(".container3").attr("style", "display:block");
 	$("#resultText").text("Wrong!");
 	junkyard.push(ri);
 	questionsIndex.splice(questionsIndex.indexOf(ri), 1);
-	score--;
+	setTimeout(newQuestion, 5000);
 }
 
-function finalResults() {}
-
-function timeConverter(timeStamp) {
-	var minutes = Math.floor(timeStamp / 60);
-	var seconds = timeStamp - minutes * 60;
-
-	if (seconds < 10) {
-		seconds = "0" + seconds;
-	}
-
-	if (minutes === 0) {
-		minutes = "00";
-	} else if (minutes < 10) {
-		minutes = "" + minutes;
-	}
-	return minutes + ":" + seconds;
+function finalResults() {
+	$(".container2").attr("style", "display:none");
+	$(".container1").attr("style", "display:block");
+	$("#finalTally").text("You got " + score + "/" + total + " correct!");
+	$("#finalText").text("wow, what was dumb quiz! Try agian?");
+	questionReset();
 }
 
 function questionReset() {
-	for (i = 0; i <= junkyard.length; i++) {
+	for (i = 0; i < 10; i++) {
+		// console.log(questionsIndex);
+		// console.log(junkyard);
 		questionsIndex.push(junkyard[i]);
-		junkyard.splice(junkyard[i]);
 	}
-}
-
-function jokerReset() {
-	for (i = 0; i >= 0; i++) {
-		console.log(questionsIndex.length);
-		console.log(junkyard);
-
-		questionsIndex.splice(0, 1);
-		junkyard.push(questionsIndex[i]);
-		console.log(questionsIndex.length);
-		console.log(junkyard);
+	for (i = 0; i < 10; i++) {
+		junkyard.splice(junkyard[i], 1);
 	}
 }
